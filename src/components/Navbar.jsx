@@ -1,6 +1,7 @@
-import React from "react";
-import { Menu, X } from "lucide-react";
-import { Button } from "@headlessui/react";
+import React, { useState, useEffect } from "react";
+import { Menu, X, TrendingUp } from "lucide-react";
+import { Button } from "./ui/button";
+import { cn } from "../lib/utils";
 
 const navLinks = [
     { name: "Home", key: "home" },
@@ -13,84 +14,135 @@ const navLinks = [
 ];
 
 export default function Navbar({ currentPage, onNavigate, onLogin, onSignup, isMobileMenuOpen, setIsMobileMenuOpen }) {
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 20);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-lg shadow-lg font-sans">
-            <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-12 transition-all duration-300">
-                <div className="flex items-center gap-3">
-                    {/* Modern SVG Logo */}
-                    <span className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 shadow-md">
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="16" cy="16" r="16" fill="#6366F1" />
-                            <path d="M10 18L16 10L22 18" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </span>
-                    <span className="text-3xl font-extrabold text-indigo-600 tracking-tight select-none">FinFlow</span>
+        <header className={cn(
+            "sticky top-0 z-50 w-full transition-all duration-300",
+            scrolled
+                ? "bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-200"
+                : "bg-white/80 backdrop-blur-lg shadow-sm"
+        )}>
+            <nav className="mx-auto max-w-7xl h-20 flex items-center justify-between px-0 py-0">
+                <div className="flex items-center gap-2 h-full">
+                    {/* Logo */}
+                    <div className="flex items-center gap-3 h-full">
+                        <div className="relative flex items-center h-full">
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 shadow-lg flex items-center justify-center">
+                                <TrendingUp size={24} className="text-white" />
+                            </div>
+                        </div>
+                        <div className="flex flex-col justify-center h-12">
+                            <span className="text-2xl font-display font-bold text-blue-600 tracking-tight leading-none">FinFlow</span>
+                            <span className="text-xs text-gray-600 font-medium leading-none">Smart Finance</span>
+                        </div>
+                    </div>
                 </div>
-                <div className="hidden md:flex gap-8 items-center">
+
+                {/* Desktop Navigation */}
+                <div className="hidden md:flex gap-4 items-center h-full">
                     {navLinks.map(link => (
-                        <button
+                        <Button
                             key={link.key}
                             onClick={() => onNavigate(link.key)}
-                            className={`font-semibold text-lg px-3 py-1 rounded-full transition-colors duration-200 ${currentPage === link.key ? "text-indigo-700 bg-indigo-100 shadow-sm" : "text-gray-700 hover:text-indigo-600 hover:bg-indigo-50"}`}
+                            variant={currentPage === link.key ? "default" : "ghost"}
+                            className="relative font-medium text-base h-10 flex items-center"
                         >
                             {link.name}
-                        </button>
+                            {currentPage === link.key && (
+                                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"></div>
+                            )}
+                        </Button>
                     ))}
                 </div>
-                <div className="hidden md:flex gap-4 items-center">
+
+                {/* Desktop Actions */}
+                <div className="hidden md:flex gap-2 items-center h-full ml-2">
                     <Button
                         onClick={onLogin}
-                        className="border border-indigo-600 text-indigo-600 px-6 py-2 rounded-full font-semibold shadow-sm hover:bg-indigo-50 transition-all duration-200"
+                        className="font-semibold h-10 flex items-center px-6 bg-blue-600 text-white hover:bg-blue-700 border-none shadow-none"
                     >
                         Login
                     </Button>
                     <Button
                         onClick={onSignup}
-                        className="bg-gradient-to-tr from-indigo-600 to-purple-500 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:from-indigo-700 hover:to-purple-600 transition-all duration-200"
+                        className="h-10 flex items-center px-6 bg-blue-600 text-white hover:bg-blue-700 border-none shadow-none"
                     >
-                        Sign Up
+                        Get Started
                     </Button>
                 </div>
-                <div className="md:hidden flex items-center">
-                    <button
+
+                {/* Mobile Menu Button */}
+                <div className="md:hidden flex items-center gap-2 h-full">
+                    <Button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="text-gray-700 hover:text-indigo-600 focus:outline-none transition-colors"
+                        variant="ghost"
+                        size="icon"
                         aria-label="Toggle menu"
+                        className="h-10 w-10 flex items-center justify-center"
                     >
-                        {isMobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
-                    </button>
+                        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                    </Button>
                 </div>
             </nav>
-            {/* Mobile Menu */}
-            <div className={`fixed inset-0 z-40 bg-black/30 transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}></div>
-            <div className={`fixed top-0 right-0 z-50 w-4/5 max-w-xs h-full bg-white shadow-2xl transform transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden`}>
-                <div className="flex flex-col gap-2 p-6 pt-8">
-                    <div className="flex justify-end mb-4">
-                        <button onClick={() => setIsMobileMenuOpen(false)} className="text-gray-700 hover:text-indigo-600">
-                            <X size={28} />
-                        </button>
-                    </div>
-                    {navLinks.map(link => (
-                        <button
-                            key={link.key}
-                            onClick={() => { onNavigate(link.key); setIsMobileMenuOpen(false); }}
-                            className={`w-full text-left px-4 py-3 rounded-full font-semibold text-lg transition-colors duration-200 ${currentPage === link.key ? "text-indigo-700 bg-indigo-100 shadow-sm" : "text-gray-700 hover:text-indigo-600 hover:bg-indigo-50"}`}
+
+            {/* Mobile Menu Overlay */}
+            <div
+                className={cn(
+                    "fixed inset-0 z-50 bg-white transition-opacity duration-300 md:hidden",
+                    isMobileMenuOpen ? "block" : "hidden"
+                )}
+            >
+                <div className="flex flex-col h-full w-full max-w-full overflow-y-auto p-6">
+                    <div className="flex items-center justify-between mb-8">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center">
+                                <TrendingUp size={20} className="text-white" />
+                            </div>
+                            <span className="text-xl font-display font-bold text-blue-600">FinFlow</span>
+                        </div>
+                        <Button
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            variant="ghost"
+                            size="icon"
                         >
-                            {link.name}
-                        </button>
-                    ))}
-                    <Button
-                        onClick={onLogin}
-                        className="mt-4 border border-indigo-600 text-indigo-600 px-6 py-2 rounded-full font-semibold shadow-sm hover:bg-indigo-50 transition-all duration-200"
-                    >
-                        Login
-                    </Button>
-                    <Button
-                        onClick={onSignup}
-                        className="mt-2 bg-gradient-to-tr from-indigo-600 to-purple-500 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:from-indigo-700 hover:to-purple-600 transition-all duration-200"
-                    >
-                        Sign Up
-                    </Button>
+                            <X size={24} />
+                        </Button>
+                    </div>
+                    <div className="flex flex-col gap-4 mb-8">
+                        {navLinks.map(link => (
+                            <Button
+                                key={link.key}
+                                onClick={() => { onNavigate(link.key); setIsMobileMenuOpen(false); }}
+                                variant={currentPage === link.key ? "default" : "ghost"}
+                                className="w-full justify-start font-medium text-lg py-4"
+                            >
+                                {link.name}
+                            </Button>
+                        ))}
+                    </div>
+                    <div className="flex flex-col gap-3 mt-auto">
+                        <Button
+                            onClick={() => { onLogin(); setIsMobileMenuOpen(false); }}
+                            className="w-full font-semibold h-12 flex items-center px-6 bg-blue-600 text-white hover:bg-blue-700 border-none shadow-none text-lg"
+                        >
+                            Login
+                        </Button>
+                        <Button
+                            onClick={() => { onSignup(); setIsMobileMenuOpen(false); }}
+                            className="w-full h-12 flex items-center px-6 bg-blue-600 text-white hover:bg-blue-700 border-none shadow-none text-lg"
+                        >
+                            Get Started
+                        </Button>
+                    </div>
                 </div>
             </div>
         </header>
