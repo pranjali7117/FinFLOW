@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, Suspense, lazy } from "react";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import Features from "./components/Features";
-import Pricing from "./components/Pricing";
-import Testimonials from "./components/Testimonials";
-import Footer from "./components/Footer";
+const Hero = lazy(() => import("./components/Hero"));
+const Features = lazy(() => import("./components/Features"));
+const Pricing = lazy(() => import("./components/Pricing"));
+const Testimonials = lazy(() => import("./components/Testimonials"));
+const Footer = lazy(() => import("./components/Footer"));
+// Prepare for Calculators page
+const Calculators = lazy(() => import("./components/Calculators"));
+const LoanEmiCalculator = lazy(() => import("./components/LoanEmiCalculator"));
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("home");
@@ -42,16 +46,25 @@ export default function App() {
         setIsMobileMenuOpen={setIsMobileMenuOpen}
       />
 
-      {/* Main Content */}
-      <main>
-        <Hero />
-        <Features />
-        <Pricing />
-        <Testimonials />
-      </main>
-
-      {/* Footer */}
-      <Footer />
+      {/* Main Content with Routing */}
+      <Suspense fallback={<div className="text-center py-20">Loading...</div>}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <main>
+                <Hero />
+                <Features />
+                <Pricing />
+                <Testimonials />
+                <Footer />
+              </main>
+            }
+          />
+          <Route path="/calculators" element={<Calculators />} />
+          <Route path="/calculators/emi" element={<LoanEmiCalculator />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 }

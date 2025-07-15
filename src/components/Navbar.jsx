@@ -2,19 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Menu, X, TrendingUp } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
+import { Link, useLocation } from "react-router-dom";
 
 const navLinks = [
-    { name: "Home", key: "home" },
-    { name: "Education", key: "education" },
-    { name: "Dashboard", key: "dashboard" },
-    { name: "Planning", key: "planning" },
-    { name: "Community", key: "community" },
-    { name: "Compare", key: "comparison" },
-    { name: "Calculators", key: "calculators" },
+    { name: "Home", path: "/" },
+    { name: "Education", path: "/education" },
+    { name: "Dashboard", path: "/dashboard" },
+    { name: "Planning", path: "/planning" },
+    { name: "Community", path: "/community" },
+    { name: "Compare", path: "/comparison" },
+    { name: "Calculators", path: "/calculators" },
 ];
 
-export default function Navbar({ currentPage, onNavigate, onLogin, onSignup, isMobileMenuOpen, setIsMobileMenuOpen }) {
+export default function Navbar({ onLogin, onSignup, isMobileMenuOpen, setIsMobileMenuOpen }) {
     const [scrolled, setScrolled] = useState(false);
+    const location = useLocation();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -34,7 +36,7 @@ export default function Navbar({ currentPage, onNavigate, onLogin, onSignup, isM
             <nav className="mx-auto max-w-7xl h-20 flex items-center justify-between px-0 py-0">
                 <div className="flex items-center gap-2 h-full">
                     {/* Logo */}
-                    <div className="flex items-center gap-3 h-full">
+                    <Link to="/" className="flex items-center gap-3 h-full">
                         <div className="relative flex items-center h-full">
                             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 shadow-lg flex items-center justify-center">
                                 <TrendingUp size={24} className="text-white" />
@@ -44,23 +46,23 @@ export default function Navbar({ currentPage, onNavigate, onLogin, onSignup, isM
                             <span className="text-2xl font-display font-bold text-blue-600 tracking-tight leading-none">FinFlow</span>
                             <span className="text-xs text-gray-600 font-medium leading-none">Smart Finance</span>
                         </div>
-                    </div>
+                    </Link>
                 </div>
 
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex gap-4 items-center h-full">
                     {navLinks.map(link => (
-                        <Button
-                            key={link.key}
-                            onClick={() => onNavigate(link.key)}
-                            variant={currentPage === link.key ? "default" : "ghost"}
-                            className="relative font-medium text-base h-10 flex items-center"
-                        >
-                            {link.name}
-                            {currentPage === link.key && (
-                                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"></div>
-                            )}
-                        </Button>
+                        <Link key={link.path} to={link.path} className="relative">
+                            <Button
+                                variant={location.pathname === link.path ? "default" : "ghost"}
+                                className="relative font-medium text-base h-10 flex items-center"
+                            >
+                                {link.name}
+                                {location.pathname === link.path && (
+                                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"></div>
+                                )}
+                            </Button>
+                        </Link>
                     ))}
                 </div>
 
@@ -119,14 +121,14 @@ export default function Navbar({ currentPage, onNavigate, onLogin, onSignup, isM
                     </div>
                     <div className="flex flex-col gap-4 mb-8">
                         {navLinks.map(link => (
-                            <Button
-                                key={link.key}
-                                onClick={() => { onNavigate(link.key); setIsMobileMenuOpen(false); }}
-                                variant={currentPage === link.key ? "default" : "ghost"}
-                                className="w-full justify-start font-medium text-lg py-4"
-                            >
-                                {link.name}
-                            </Button>
+                            <Link key={link.path} to={link.path} onClick={() => setIsMobileMenuOpen(false)}>
+                                <Button
+                                    variant={location.pathname === link.path ? "default" : "ghost"}
+                                    className="w-full justify-start font-medium text-lg py-4"
+                                >
+                                    {link.name}
+                                </Button>
+                            </Link>
                         ))}
                     </div>
                     <div className="flex flex-col gap-3 mt-auto">

@@ -16,6 +16,9 @@ import {
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { cn } from "../lib/utils";
+// Add Framer Motion imports
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
 const features = [
     {
@@ -85,37 +88,58 @@ export default function Features() {
 
             {/* Features Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                {features.map((feature, idx) => (
-                    <Card key={idx} className="group hover:shadow-lg transition-all duration-300 border-0 bg-gradient-to-br from-white to-gray-50 backdrop-blur-sm">
-                        <CardHeader className="pb-4">
-                            <div className="flex justify-center mb-4">
-                                <div className="p-4 rounded-2xl bg-blue-100 group-hover:bg-blue-200 transition-colors duration-300">
-                                    {feature.icon}
-                                </div>
-                            </div>
-                            <CardTitle className="text-xl font-display font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">
-                                {feature.title}
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                            <p className="text-gray-600 mb-6 leading-relaxed">
-                                {feature.description}
-                            </p>
-                            <div className="space-y-2 mb-6">
-                                {feature.benefits.map((benefit, benefitIdx) => (
-                                    <div key={benefitIdx} className="flex items-center gap-2 text-sm text-gray-600">
-                                        <CheckCircle size={16} className="text-emerald-600 flex-shrink-0" />
-                                        <span>{benefit}</span>
+                {features.map((feature, idx) => {
+                    // Add scroll animation for each card
+                    const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.15 });
+                    const controls = useAnimation();
+                    React.useEffect(() => {
+                        if (inView) {
+                            controls.start({
+                                opacity: 1,
+                                y: 0,
+                                transition: { duration: 0.7, delay: idx * 0.12, ease: "easeOut" }
+                            });
+                        }
+                    }, [controls, inView, idx]);
+                    return (
+                        <motion.div
+                            key={idx}
+                            ref={ref}
+                            initial={{ opacity: 0, y: 40 }}
+                            animate={controls}
+                        >
+                            <Card className="group hover:shadow-lg transition-all duration-300 border-0 bg-gradient-to-br from-white to-gray-50 backdrop-blur-sm">
+                                <CardHeader className="pb-4">
+                                    <div className="flex justify-center mb-4">
+                                        <div className="p-4 rounded-2xl bg-blue-100 group-hover:bg-blue-200 transition-colors duration-300">
+                                            {feature.icon}
+                                        </div>
                                     </div>
-                                ))}
-                            </div>
-                            <div className="flex items-center gap-2 text-blue-600 font-medium group-hover:gap-3 transition-all duration-300">
-                                <span>Learn more</span>
-                                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
+                                    <CardTitle className="text-xl font-display font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">
+                                        {feature.title}
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="pt-0">
+                                    <p className="text-gray-600 mb-6 leading-relaxed">
+                                        {feature.description}
+                                    </p>
+                                    <div className="space-y-2 mb-6">
+                                        {feature.benefits.map((benefit, benefitIdx) => (
+                                            <div key={benefitIdx} className="flex items-center gap-2 text-sm text-gray-600">
+                                                <CheckCircle size={16} className="text-emerald-600 flex-shrink-0" />
+                                                <span>{benefit}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="flex items-center gap-2 text-blue-600 font-medium group-hover:gap-3 transition-all duration-300">
+                                        <span>Learn more</span>
+                                        <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    );
+                })}
             </div>
 
             {/* Stats Section */}
