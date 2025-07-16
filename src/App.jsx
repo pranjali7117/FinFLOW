@@ -9,6 +9,18 @@ const Footer = lazy(() => import("./components/Footer"));
 // Prepare for Calculators page
 const Calculators = lazy(() => import("./components/Calculators"));
 const LoanEmiCalculator = lazy(() => import("./components/LoanEmiCalculator"));
+const SipCalculator = lazy(() => import("./components/SipCalculator"));
+const LumpSumCalculator = lazy(() => import("./components/LumpSumCalculator"));
+const CompoundInterestCalculator = lazy(() => import("./components/CompoundInterestCalculator"));
+const RetirementCalculator = lazy(() => import("./components/RetirementCalculator"));
+const EmergencyFundCalculator = lazy(() => import("./components/EmergencyFundCalculator"));
+const TaxCalculator = lazy(() => import("./components/TaxCalculator"));
+const NetWorthCalculator = lazy(() => import("./components/NetWorthCalculator"));
+const InvestmentComparisonCalculator = lazy(() => import("./components/InvestmentComparisonCalculator"));
+const SavingsGoalCalculator = lazy(() => import("./components/SavingsGoalCalculator"));
+const RentVsBuyCalculator = lazy(() => import("./components/RentVsBuyCalculator"));
+const CommunityChallengeCalculator = lazy(() => import("./components/CommunityChallengeCalculator"));
+const CurrencyConverter = lazy(() => import("./components/CurrencyConverter"));
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("home");
@@ -63,6 +75,18 @@ export default function App() {
           />
           <Route path="/calculators" element={<Calculators />} />
           <Route path="/calculators/emi" element={<LoanEmiCalculator />} />
+          <Route path="/calculators/sip" element={<SipCalculator />} />
+          <Route path="/calculators/lumpsum" element={<LumpSumCalculator />} />
+          <Route path="/calculators/compound-interest" element={<CompoundInterestCalculator />} />
+          <Route path="/calculators/retirement" element={<RetirementCalculator />} />
+          <Route path="/calculators/emergency-fund" element={<EmergencyFundCalculator />} />
+          <Route path="/calculators/tax" element={<TaxCalculator />} />
+          <Route path="/calculators/net-worth" element={<NetWorthCalculator />} />
+          <Route path="/calculators/investment-comparison" element={<InvestmentComparisonCalculator />} />
+          <Route path="/calculators/savings-goal" element={<SavingsGoalCalculator />} />
+          <Route path="/calculators/rent-vs-buy" element={<RentVsBuyCalculator />} />
+          <Route path="/calculators/community-challenge" element={<CommunityChallengeCalculator />} />
+          <Route path="/calculators/currency-converter" element={<CurrencyConverter />} />
         </Routes>
       </Suspense>
     </div>
