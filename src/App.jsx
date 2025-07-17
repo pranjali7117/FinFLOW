@@ -21,6 +21,7 @@ const SavingsGoalCalculator = lazy(() => import("./components/SavingsGoalCalcula
 const RentVsBuyCalculator = lazy(() => import("./components/RentVsBuyCalculator"));
 const CommunityChallengeCalculator = lazy(() => import("./components/CommunityChallengeCalculator"));
 const CurrencyConverter = lazy(() => import("./components/CurrencyConverter"));
+const Comparison = lazy(() => import("./components/Comparison"));
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("home");
@@ -87,6 +88,7 @@ export default function App() {
           <Route path="/calculators/rent-vs-buy" element={<RentVsBuyCalculator />} />
           <Route path="/calculators/community-challenge" element={<CommunityChallengeCalculator />} />
           <Route path="/calculators/currency-converter" element={<CurrencyConverter />} />
+          <Route path="/comparison" element={<Comparison />} />
         </Routes>
       </Suspense>
     </div>
