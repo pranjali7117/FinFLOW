@@ -22,6 +22,9 @@ const RentVsBuyCalculator = lazy(() => import("./components/RentVsBuyCalculator"
 const CommunityChallengeCalculator = lazy(() => import("./components/CommunityChallengeCalculator"));
 const CurrencyConverter = lazy(() => import("./components/CurrencyConverter"));
 const Comparison = lazy(() => import("./components/Comparison"));
+const Planning = lazy(() => import("./components/Planning"));
+const BudgetPlanner = lazy(() => import("./components/BudgetPlanner"));
+const Community = lazy(() => import("./components/Community/Community"));
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("home");
@@ -74,6 +77,10 @@ export default function App() {
               </main>
             }
           />
+          <Route path="/planning" element={<Planning />} />
+          <Route path="/planning/budget" element={<BudgetPlanner />} />
+          <Route path="/planning/savings-goal" element={<SavingsGoalCalculator />} />
+          <Route path="/planning/emergency-fund" element={<EmergencyFundCalculator />} />
           <Route path="/calculators" element={<Calculators />} />
           <Route path="/calculators/emi" element={<LoanEmiCalculator />} />
           <Route path="/calculators/sip" element={<SipCalculator />} />
@@ -89,6 +96,7 @@ export default function App() {
           <Route path="/calculators/community-challenge" element={<CommunityChallengeCalculator />} />
           <Route path="/calculators/currency-converter" element={<CurrencyConverter />} />
           <Route path="/comparison" element={<Comparison />} />
+          <Route path="/community" element={<Suspense fallback={<div>Loading...</div>}><Community /></Suspense>} />
         </Routes>
       </Suspense>
     </div>
