@@ -27,13 +27,14 @@ export default function Navbar({ onLogin, onSignup, isMobileMenuOpen, setIsMobil
     }, []);
 
     return (
+        <>
         <header className={cn(
             "sticky top-0 z-50 w-full transition-all duration-300",
             scrolled
                 ? "bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-200"
                 : "bg-white/80 backdrop-blur-lg shadow-sm"
         )}>
-            <nav className="mx-auto max-w-7xl h-20 flex items-center justify-between px-0 py-0">
+            <nav className="mx-auto max-w-7xl h-20 flex items-center justify-between px-4 sm:px-6 py-0">
                 <div className="flex items-center gap-2 h-full">
                     {/* Logo */}
                     <Link to="/" className="flex items-center gap-3 h-full">
@@ -89,64 +90,65 @@ export default function Navbar({ onLogin, onSignup, isMobileMenuOpen, setIsMobil
                         variant="ghost"
                         size="icon"
                         aria-label="Toggle menu"
-                        className="h-10 w-10 flex items-center justify-center"
+                        className="h-10 w-10 flex items-center justify-center text-gray-700"
                     >
                         {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </Button>
                 </div>
             </nav>
+        </header>
 
-            {/* Mobile Menu Overlay */}
-            <div
-                className={cn(
-                    "fixed inset-0 z-50 bg-white transition-opacity duration-300 md:hidden",
-                    isMobileMenuOpen ? "block" : "hidden"
-                )}
-            >
-                <div className="flex flex-col h-full w-full max-w-full overflow-y-auto p-6">
-                    <div className="flex items-center justify-between mb-8">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center">
-                                <TrendingUp size={20} className="text-white" />
-                            </div>
-                            <span className="text-xl font-display font-bold text-blue-600">FinFlow</span>
+        {/* Mobile Menu Overlay */}
+        <div
+            className={cn(
+                "fixed inset-0 z-[60] bg-white transition-opacity duration-300 md:hidden",
+                isMobileMenuOpen ? "block" : "hidden"
+            )}
+        >
+            <div className="flex flex-col h-full w-full max-w-full overflow-y-auto p-6">
+                <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center">
+                            <TrendingUp size={20} className="text-white" />
                         </div>
-                        <Button
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            variant="ghost"
-                            size="icon"
-                        >
-                            <X size={24} />
-                        </Button>
+                        <span className="text-xl font-display font-bold text-blue-600">FinFlow</span>
                     </div>
-                    <div className="flex flex-col gap-4 mb-8">
-                        {navLinks.map(link => (
-                            <Link key={link.path} to={link.path} onClick={() => setIsMobileMenuOpen(false)}>
-                                <Button
-                                    variant={location.pathname === link.path ? "default" : "ghost"}
-                                    className="w-full justify-start font-medium text-lg py-4"
-                                >
-                                    {link.name}
-                                </Button>
-                            </Link>
-                        ))}
-                    </div>
-                    <div className="flex flex-col gap-3 mt-auto">
-                        <Button
-                            onClick={() => { onLogin(); setIsMobileMenuOpen(false); }}
-                            className="w-full font-semibold h-12 flex items-center px-6 bg-blue-600 text-white hover:bg-blue-700 border-none shadow-none text-lg"
-                        >
-                            Login
-                        </Button>
-                        <Button
-                            onClick={() => { onSignup(); setIsMobileMenuOpen(false); }}
-                            className="w-full h-12 flex items-center px-6 bg-blue-600 text-white hover:bg-blue-700 border-none shadow-none text-lg"
-                        >
-                            Get Started
-                        </Button>
-                    </div>
+                    <Button
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        variant="ghost"
+                        size="icon"
+                    >
+                        <X size={24} />
+                    </Button>
+                </div>
+                <div className="flex flex-col gap-4 mb-8">
+                    {navLinks.map(link => (
+                        <Link key={link.path} to={link.path} onClick={() => setIsMobileMenuOpen(false)}>
+                            <Button
+                                variant={location.pathname === link.path ? "default" : "ghost"}
+                                className="w-full justify-start font-medium text-lg py-4"
+                            >
+                                {link.name}
+                            </Button>
+                        </Link>
+                    ))}
+                </div>
+                <div className="flex flex-col gap-3 mt-auto">
+                    <Button
+                        onClick={() => { onLogin(); setIsMobileMenuOpen(false); }}
+                        className="w-full font-semibold h-12 flex items-center px-6 bg-blue-600 text-white hover:bg-blue-700 border-none shadow-none text-lg"
+                    >
+                        Login
+                    </Button>
+                    <Button
+                        onClick={() => { onSignup(); setIsMobileMenuOpen(false); }}
+                        className="w-full h-12 flex items-center px-6 bg-blue-600 text-white hover:bg-blue-700 border-none shadow-none text-lg"
+                    >
+                        Get Started
+                    </Button>
                 </div>
             </div>
-        </header>
+        </div>
+        </>
     );
 } 
