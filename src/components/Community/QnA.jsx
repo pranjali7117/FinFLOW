@@ -15,7 +15,7 @@ async function geminiGenerate(prompt) {
 
 const DEMO_QUESTIONS = [
     {
-        id: "demo1",
+        id: "demo-qna-1",
         title: "How to start investing as a student?",
         content: "What are the best beginner-friendly investment options?",
         userId: "demo-user",
@@ -26,7 +26,7 @@ const DEMO_QUESTIONS = [
         createdAt: new Date()
     },
     {
-        id: "demo2",
+        id: "demo-qna-2",
         title: "How to build an emergency fund?",
         content: "How much should I save and where should I keep it?",
         userId: "demo-user2",
@@ -46,7 +46,9 @@ export default function QnA() {
     useEffect(() => {
         const unsub = onSnapshot(collection(db, "qna"), (snap) => {
             const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-            setQuestions([...DEMO_QUESTIONS, ...data]);
+            const merged = [...DEMO_QUESTIONS, ...data];
+            setQuestions(merged);
+            console.log('QnA:', merged);
         });
         return () => unsub();
     }, []);
@@ -81,6 +83,7 @@ export default function QnA() {
                 <Button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Post Question</Button>
             </form>
             <div className="space-y-4">
+                {questions.length === 0 && <div className="text-gray-500">No questions yet.</div>}
                 {questions.map(q => (
                     <div key={q.id} className="bg-white p-4 rounded shadow border border-gray-100">
                         <div className="flex items-center justify-between">

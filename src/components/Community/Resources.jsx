@@ -8,7 +8,7 @@ const db = getFirestore();
 
 const DEMO_RESOURCES = [
     {
-        id: "demo1",
+        id: "demo-resource-1",
         title: "Best Budgeting Apps",
         url: "https://www.example.com/budget-apps",
         description: "A curated list of top budgeting apps for 2024.",
@@ -18,7 +18,7 @@ const DEMO_RESOURCES = [
         createdAt: new Date()
     },
     {
-        id: "demo2",
+        id: "demo-resource-2",
         title: "Investing 101 Video",
         url: "https://www.example.com/investing-101",
         description: "A beginner-friendly video on investing basics.",
@@ -37,7 +37,9 @@ export default function Resources() {
     useEffect(() => {
         const unsub = onSnapshot(collection(db, "resources"), (snap) => {
             const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-            setResources([...DEMO_RESOURCES, ...data]);
+            const merged = [...DEMO_RESOURCES, ...data];
+            setResources(merged);
+            console.log('Resources:', merged);
         });
         return () => unsub();
     }, []);
@@ -63,6 +65,7 @@ export default function Resources() {
                 <Button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Share Resource</Button>
             </form>
             <div className="space-y-4">
+                {resources.length === 0 && <div className="text-gray-500">No resources yet.</div>}
                 {resources.map(r => (
                     <div key={r.id} className="bg-white p-4 rounded shadow border border-gray-100">
                         <div className="flex items-center justify-between">

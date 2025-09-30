@@ -8,7 +8,7 @@ const db = getFirestore();
 
 const DEMO_CHALLENGES = [
     {
-        id: "demo1",
+        id: "demo-challenge-1",
         title: "July Savings Challenge",
         description: "Save at least ₹5,000 this month. Track your progress!",
         type: "Savings",
@@ -21,7 +21,7 @@ const DEMO_CHALLENGES = [
         createdAt: new Date()
     },
     {
-        id: "demo2",
+        id: "demo-challenge-2",
         title: "Investment Starter",
         description: "Invest ₹1,000 in any asset this month.",
         type: "Investment",
@@ -40,7 +40,9 @@ export default function Challenges() {
     useEffect(() => {
         const unsub = onSnapshot(collection(db, "challenges"), (snap) => {
             const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-            setChallenges([...DEMO_CHALLENGES, ...data]);
+            const merged = [...DEMO_CHALLENGES, ...data];
+            setChallenges(merged);
+            console.log('Challenges:', merged);
         });
         return () => unsub();
     }, []);
@@ -73,6 +75,7 @@ export default function Challenges() {
                 <Button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Create Challenge</Button>
             </form>
             <div className="space-y-4">
+                {challenges.length === 0 && <div className="text-gray-500">No challenges yet.</div>}
                 {challenges.map(c => (
                     <div key={c.id} className="bg-white p-4 rounded shadow border border-gray-100">
                         <div className="flex items-center justify-between">

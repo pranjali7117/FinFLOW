@@ -8,7 +8,7 @@ const db = getFirestore();
 
 const DEMO_STORIES = [
     {
-        id: "demo1",
+        id: "demo-story-1",
         title: "How I Saved My First $10,000",
         content: "I started by tracking my expenses and setting a monthly savings goal. It took discipline, but seeing my progress kept me motivated!",
         userId: "demo-user",
@@ -18,7 +18,7 @@ const DEMO_STORIES = [
         createdAt: new Date()
     },
     {
-        id: "demo2",
+        id: "demo-story-2",
         title: "Paid Off My Student Loans Early",
         content: "I used the snowball method and made extra payments whenever I could. It feels amazing to be debt-free!",
         userId: "demo-user2",
@@ -35,7 +35,9 @@ export default function Stories() {
     useEffect(() => {
         const unsub = onSnapshot(collection(db, "userStories"), (snap) => {
             const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-            setStories([...DEMO_STORIES, ...data]);
+            const merged = [...DEMO_STORIES, ...data];
+            setStories(merged);
+            console.log('Stories:', merged);
         });
         return () => unsub();
     }, []);
@@ -57,6 +59,7 @@ export default function Stories() {
                 <Button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Submit Story</Button>
             </form>
             <div className="space-y-4">
+                {stories.length === 0 && <div className="text-gray-500">No stories yet.</div>}
                 {stories.map(s => (
                     <div key={s.id} className="bg-white p-4 rounded shadow border border-gray-100">
                         <h3 className="font-semibold text-lg">{s.title}</h3>

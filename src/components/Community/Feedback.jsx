@@ -8,7 +8,7 @@ const db = getFirestore();
 
 const DEMO_FEEDBACKS = [
     {
-        id: "demo1",
+        id: "demo-feedback-1",
         title: "Add dark mode",
         content: "A dark mode option would be great for night use!",
         userId: "demo-user",
@@ -17,7 +17,7 @@ const DEMO_FEEDBACKS = [
         createdAt: new Date()
     },
     {
-        id: "demo2",
+        id: "demo-feedback-2",
         title: "More calculators",
         content: "Please add a SIP and retirement calculator.",
         userId: "demo-user2",
@@ -35,7 +35,9 @@ export default function Feedback() {
     useEffect(() => {
         const unsub = onSnapshot(collection(db, "feedback"), (snap) => {
             const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-            setFeedbacks([...DEMO_FEEDBACKS, ...data]);
+            const merged = [...DEMO_FEEDBACKS, ...data];
+            setFeedbacks(merged);
+            console.log('Feedback:', merged);
         });
         return () => unsub();
     }, []);
@@ -61,6 +63,7 @@ export default function Feedback() {
                 <Button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Submit</Button>
             </form>
             <div className="space-y-4">
+                {feedbacks.length === 0 && <div className="text-gray-500">No feedback yet.</div>}
                 {feedbacks.map(f => (
                     <div key={f.id} className="bg-white p-4 rounded shadow border border-gray-100">
                         <div className="flex items-center justify-between">

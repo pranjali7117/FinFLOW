@@ -8,7 +8,7 @@ const db = getFirestore();
 
 const DEMO_EVENTS = [
     {
-        id: "demo1",
+        id: "demo-event-1",
         title: "Webinar: Financial Planning 101",
         date: "2024-08-01",
         time: "18:00",
@@ -19,7 +19,7 @@ const DEMO_EVENTS = [
         createdAt: new Date()
     },
     {
-        id: "demo2",
+        id: "demo-event-2",
         title: "Community Meetup",
         date: "2024-08-15",
         time: "17:00",
@@ -39,7 +39,9 @@ export default function Events() {
     useEffect(() => {
         const unsub = onSnapshot(collection(db, "events"), (snap) => {
             const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-            setEvents([...DEMO_EVENTS, ...data]);
+            const merged = [...DEMO_EVENTS, ...data];
+            setEvents(merged);
+            console.log('Events:', merged);
         });
         return () => unsub();
     }, []);
@@ -66,6 +68,7 @@ export default function Events() {
                 <Button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Add Event</Button>
             </form>
             <div className="space-y-4">
+                {events.length === 0 && <div className="text-gray-500">No events yet.</div>}
                 {events.map(e => (
                     <div key={e.id} className="bg-white p-4 rounded shadow border border-gray-100">
                         <div className="flex items-center justify-between">

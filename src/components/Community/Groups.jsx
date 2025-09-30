@@ -8,7 +8,7 @@ const db = getFirestore();
 
 const DEMO_GROUPS = [
     {
-        id: "demo1",
+        id: "demo-group-1",
         name: "Student Investors",
         description: "A group for students interested in learning about investing.",
         userId: "demo-user",
@@ -19,7 +19,7 @@ const DEMO_GROUPS = [
         createdAt: new Date()
     },
     {
-        id: "demo2",
+        id: "demo-group-2",
         name: "Budgeting Enthusiasts",
         description: "Share your best budgeting tips and tricks!",
         userId: "demo-user2",
@@ -38,7 +38,9 @@ export default function Groups() {
     useEffect(() => {
         const unsub = onSnapshot(collection(db, "groups"), (snap) => {
             const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-            setGroups([...DEMO_GROUPS, ...data]);
+            const merged = [...DEMO_GROUPS, ...data];
+            setGroups(merged);
+            console.log('Groups:', merged);
         });
         return () => unsub();
     }, []);
@@ -69,6 +71,7 @@ export default function Groups() {
                 <Button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Create Group</Button>
             </form>
             <div className="space-y-4">
+                {groups.length === 0 && <div className="text-gray-500">No groups yet.</div>}
                 {groups.map(g => (
                     <div key={g.id} className="bg-white p-4 rounded shadow border border-gray-100">
                         <div className="flex items-center justify-between">
